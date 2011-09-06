@@ -1,6 +1,33 @@
 function ChartX(canvasid, options) {
 	var pos = 0;
+	var divc;
+	var canvas;
+	var context;
+	var pg;
+	var pgcontext;
+	var prev;
+	var count = 0;
 
+	this.table = null;
+	
+	this.clear = function() {
+		clearrect(context, 0, 0, options.width, options.height, options.bgcolor);
+		clearrect(pgcontext, 0, 0, options.width * options.bufferfactor, options.height, options.bgcolor);
+		pos = 0;
+		prev = null;
+		count = 0;
+	}
+	
+	this.toggleLegend = function() {
+		if(options.legend) {
+			this.table.setAttribute("display", "block");
+		}
+		else {
+			this.table.setAttribute("display", "none");
+		}
+		options.legend = !options.legend;
+	}
+	
 	function clearrect(context, left, top, width, height, color) {
 		var oldFill = context.fillStyle;
 		context.fillStyle = options.bgcolor;
@@ -24,47 +51,7 @@ function ChartX(canvasid, options) {
 		context.closePath();
 	}
 
-	var divc = document.getElementById(canvasid + "div");
-	if(!divc) {
-		divc = document.createElement("div");
-		divc.setAttribute("class", "chartc");
-		divc.setAttribute("id", canvasid + "div");
-		var container = document.getElementById(options.container);
-		container.appendChild(divc);
-		//$(options.container).append(divc);
-		divc.setAttribute("display", "block");
-	}
-	if(options.title) divc.innerHTML = "<span>" + options.title + "</span><br />";
-	if(options.onclick) {
-		divc.onclick = options.onclick;
-	}
-	divc = document.getElementById(canvasid + "div");
-	//divc = $("#" + canvasid + "div");
-	var canvas = document.getElementById(canvasid);
-	if(!canvas) {
-		canvas = document.createElement("canvas");
-		canvas.setAttribute("class", "chart");
-		canvas.setAttribute("id", canvasid);
-		divc.appendChild(canvas);
-		canvas.setAttribute("display", "block");
-		canvas.setAttribute("visibility", "visible");
-	}
-	canvas.setAttribute("width", options.width);
-	canvas.setAttribute("height", options.height);
-
-	var context = canvas.getContext("2d");
-
-	context.lineWidth = options.linewidth || 1;
-	this.showtable = options.showtable;
-	clearrect(context, 0, 0, options.width, options.height, options.bgcolor);
-
-	var pg = document.createElement("canvas");
-	pg.setAttribute("width", options.width * options.bufferfactor);
-	pg.setAttribute("height", options.height);
-	var pgcontext = pg.getContext("2d");
-	pgcontext.lineWidth = options.linewidth || 1;
-	clearrect(pgcontext, 0, 0, options.width * options.bufferfactor, options.height, options.bgcolor);
-	if(options.grid) {
+	function drawGrid() {
 		pgcontext.lineWidth = options.grid.linewidth || 1;
         pgcontext.strokeStyle = options.grid.color;
 		for(i=(options.width/options.grid.hsegments); i<options.width * options.bufferfactor; i += (options.width/options.grid.hsegments)) {
@@ -75,28 +62,55 @@ function ChartX(canvasid, options) {
 		}
 		pgcontext.lineWidth = options.linewidth || 1;
 	}
-	var prev = null;
-	var count = 0;
+	
+	divc = document.getElementById(canvasid + "div");
+	if(!divc) {
+		divc = document.createElement("div");
+		divc.setAttribute("class", "cx-chart");
+		divc.setAttribute("id", canvasid + "div");
+		var container = document.getElementById(options.container);
+		container.appendChild(divc);
+		divc.setAttribute("display", "block");
+	}
+	if(options.title) divc.innerHTML = "<span>" + options.title + "</span><br />";
+	if(options.onclick) {
+		divc.onclick = options.onclick;
+	}
+	divc = document.getElementById(canvasid + "div");
+	canvas = document.getElementById(canvasid);
+	if(!canvas) {
+		canvas = document.createElement("canvas");
+		canvas.setAttribute("class", "cx-canvas");
+		canvas.setAttribute("id", canvasid);
+		divc.appendChild(canvas);
+		canvas.setAttribute("display", "block");
+		canvas.setAttribute("visibility", "visible");
+	}
+	canvas.setAttribute("width", options.width);
+	canvas.setAttribute("height", options.height);
+	context = canvas.getContext("2d");
+	context.lineWidth = options.linewidth || 1;
+	clearrect(context, 0, 0, options.width, options.height, options.bgcolor);
+	pg = document.createElement("canvas");
+	pg.setAttribute("width", options.width * options.bufferfactor);
+	pg.setAttribute("height", options.height);
+	pgcontext = pg.getContext("2d");
+	pgcontext.lineWidth = options.linewidth || 1;
+	clearrect(pgcontext, 0, 0, options.width * options.bufferfactor, options.height, options.bgcolor);
+	if(options.grid) drawGrid();
+	prev = null;
+	count = 0;
 	this.draw = function(stat) {
 		count++;
 		var lbuff = [];
-		lbuff.push("<span style=\"display: block; float: left; padding: 2px;\">" + count + ": </span>");
+		lbuff.push("<span class=\"cx-legend-label\" style=\"display: block; float: left; padding: 2px;\">" + count + ": </span>");
 		if(pos > ((options.width * options.bufferfactor) - 1)) {
 			clearrect(pgcontext, 0, 0, options.width * options.bufferfactor, options.height, options.bgcolor);
-			if(options.grid) {
-				pgcontext.lineWidth = options.grid.linewidth || 1;
-		        pgcontext.strokeStyle = options.grid.color;
-				for(i=(options.width/options.grid.hsegments); i<options.width * options.bufferfactor; i += (options.width/options.grid.hsegments)) {
-					line(pgcontext, i, options.height, i, 0);
-				}
-				for(i=(options.height/options.grid.vsegments); i<options.height; i += (options.height/options.grid.vsegments)) {
-					line(pgcontext, 0, i, options.width * options.bufferfactor, i);
-				}
-			}
+			if(options.grid) drawGrid();
 			pgcontext.drawImage(canvas, 0, 0, options.width, options.height);
 			pos = options.width;
 		}
-		y1 = options.height;
+		var y1 = options.height;
 		options.series.forEach(function(item) {
 			pgcontext.lineWidth = options.linewidth || 1;
         	pgcontext.strokeStyle = item.color;
@@ -134,15 +148,17 @@ function ChartX(canvasid, options) {
 				this.table = document.createElement("div");
 				divc.appendChild(this.table);
 			}
-			this.table.setAttribute("class", "infoon");
+			this.table.setAttribute("display", "block");
+			this.table.setAttribute("class", "cx-legend");
+			this.table.setAttribute("width", options.width);
 			options.series.forEach(function(s) {
-				lbuff.push("<span style=\"display: block; padding: 2px; float: left; text-align: right; color: " + s.color + "; color: " + s.txcolor + ";\">" + s.name + " (<strong>" + stat[s.name].toFixed(2) + "</strong>)</span>");
+				lbuff.push("<span class=\"cx-legend-indicator\" style=\"display: block; padding: 2px; float: left; text-align: right; color: " + s.color + "; color: " + s.txcolor + ";\">" + s.name + " (<strong>" + stat[s.name].toFixed(2) + "</strong>)</span>");
 			});
 			this.table.innerHTML = lbuff.join("");
 		}
 		else {
 			if(this.table) {
-				this.table.setAttribute("class", "infooff");
+				this.table.setAttribute("display", "none");
 			}		
 		}
 		pos++;

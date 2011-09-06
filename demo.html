@@ -5,45 +5,73 @@
 <script type="text/javascript" src="js/chartx.js"></script>
 <script type="text/javascript" src="js/prices.js"></script>
 <script type="text/javascript">
+var panelwidth = (window.innerWidth / 2) - 20;
 function onLoad() {
-	var c1 = new ChartX("test1", {
-		"width": 1000,
+	var c6 = new ChartX("PRICE/WTI/BRN", {
+		"width": panelwidth,
 		"height": 160,
 		"bufferfactor": 3,
-		"title": "WTI",
+		"title": "WTI, Brent Price",
 		"legend": true,
 		"container": "charts",
 		"bgcolor": "black",
 		"linewidth": 1,
-		"grid": {
-			"color": "#666666",
-			"hsegments": 200,
-			"vsegments": 20,
-			"linewidth": .5
-		},
 		"series": [
 			{
 				"name": "WTI",
 				"color": "#cc3300",
 				"type": "line",
-				"yscale": 40,
-				"cross": 20
+				"yscale": 870,
+				"cross": -300
+			},
+			{
+				"name": "Brent",
+				"color": "#339900",
+				"type": "line",
+				"yscale": 870,
+				"cross": -300
 			}
 		]
 	});
-	var c2 = new ChartX("test2", {
-		"width": 1000,
+	var c1 = new ChartX("UDV/WTI/BRN", {
+		"width": panelwidth,
 		"height": 160,
 		"bufferfactor": 3,
-		"title": "Brent",
+		"title": "WTI U/D v Brent U/D",
+		"legend": true,
+		"container": "charts",
+		"bgcolor": "black",
+		"linewidth": 1,
+		"series": [
+			{
+				"name": "WTI",
+				"color": "#cc3300",
+				"type": "stack",
+				"yscale": 20,
+				"cross": 0
+			},
+			{
+				"name": "Brent",
+				"color": "#339900",
+				"type": "stack",
+				"yscale": 20,
+				"cross": 0
+			}
+		]
+	});
+	var c2 = new ChartX("UD/BRN", {
+		"width": panelwidth,
+		"height": 160,
+		"bufferfactor": 3,
+		"title": "Brent Up/Down",
 		"legend": true,
 		"container": "charts",
 		"bgcolor": "black",
 		"linewidth": 1,
 		"grid": {
 			"color": "#666666",
-			"hsegments": 200,
-			"vsegments": 20,
+			"hsegments": panelwidth/5,
+			"vsegments": 100/5,
 			"linewidth": .5
 		},
 		"series": [
@@ -56,26 +84,51 @@ function onLoad() {
 			}
 		]
 	});
-	var c3 = new ChartX("test3", {
-		"width": 400,
-		"height": 100,
+	var c3 = new ChartX("UD/WTI", {
+		"width": panelwidth,
+		"height": 160,
 		"bufferfactor": 3,
-		"title": "Spread",
+		"title": "WTI Up/Down",
 		"legend": true,
 		"container": "charts",
 		"bgcolor": "black",
 		"linewidth": 1,
 		"grid": {
 			"color": "#666666",
-			"hsegments": 50,
-			"vsegments": 20,
+			"hsegments": panelwidth/5,
+			"vsegments": 100/5,
+			"linewidth": .5
+		},
+		"series": [
+			{
+				"name": "WTI",
+				"color": "#ff9933",
+				"type": "line",
+				"yscale": 40,
+				"cross": 20
+			}
+		]
+	});
+	var c4 = new ChartX("SPREAD", {
+		"width": panelwidth,
+		"height": 100,
+		"bufferfactor": 3,
+		"title": "Spread - WTI v Brent",
+		"legend": true,
+		"container": "charts",
+		"bgcolor": "black",
+		"linewidth": 1,
+		"grid": {
+			"color": "#666666",
+			"hsegments": panelwidth/5,
+			"vsegments": 100/5,
 			"linewidth": .5
 		},
 		"series": [
 			{
 				"name": "Spread",
 				"color": "#cc66cc",
-				"type": "line",
+				"type": "stack",
 				"yscale": 30,
 				"cross": 15
 			}
@@ -86,21 +139,30 @@ function onLoad() {
 	var lastspread = 0;
 	setInterval(function() {
 		var price = prices[idx++];
+		var spread = ((price[2]*100) - (price[3]*100));
 		if(prev) {
 			var wti = ((price[2] * 100) - (prev[2] * 100));
 			var brent = ((price[3] * 100) - (prev[3] * 100));
 			c1.draw({
-				WTI: wti
+				WTI: wti,
+				Brent: brent
 			});
 			c2.draw({
 				Brent: brent
 			});
 			c3.draw({
-				Spread: Math.abs(((price[2]*100) - (price[3]*100))) - lastspread,
+				WTI: wti
+			});
+			c4.draw({
+				Spread: spread - lastspread,
+			});
+			c6.draw({
+				WTI: (price[2] * 100) - 11000,
+				Brent: (price[3] * 100) - 8000
 			});
 		}
 		prev = price;
-		lastspread = Math.abs((price[2] * 100) - (price[3] * 100));
+		lastspread = spread;
 		if(idx == prices.length) idx = 0;
 	}, 100);
 /*
@@ -128,17 +190,30 @@ body {
   padding: 4px;
 }
 
-div.chartc {
+div.cx-chart {
 	padding: 4px;
 	border: 1px solid silver;
 	margin: 2px;
 	float: left;
+	background-color: #999999;
+	color: white;
 }
 
-canvas.chart {
-	border: 1px solid gray; 
-	margin: 2px;
+span.cx-legend-label {
+	background-color: black;
 }
+
+span.cx-legend-indicator {
+	background-color: black;
+}
+
+canvas.cx-canvas {
+}
+
+div.cx-legend {
+	background-color: black;
+}
+
 </style>
 </head>
 <body onload="onLoad()">
