@@ -10,48 +10,48 @@ var panelWidth = (window.innerWidth) - 20;
 var panelHeight = (window.innerHeight) - 60;
 function onLoad() {
 	var c6 = new ChartX("PRICE/WTI/BRN", {
-		"width": panelWidth,
-		"height": panelHeight,
-		"bufferfactor": 3,
-		"title": "WTI, Brent Price",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"grid": {
-			"color": "#666666",
-			"hsegments": panelWidth/5,
-			"vsegments": panelHeight/5,
-			"linewidth": .5
+		width: panelWidth,
+		height: panelHeight,
+		bufferfactor: 3,
+		title: "WTI, Brent Price",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		grid: {
+			color: "#666666",
+			hsegments: panelWidth/5,
+			vsegments: panelHeight/5,
+			linewidth: .5
 		},
-		"linewidth": 1,
-		"series": [
+		linewidth: 1,
+		series: [
 			{
-				"name": "WTI",
-				"color": "#cc3300",
-				"type": "line",
-				"yscale": 220,
-				"cross": 0
+				name: "WTI",
+				color: "#cc3300",
+				type: "line",
+				yscale: 220,
+				cross: 0
 			},
 			{
-				"name": "MA1",
-				"color": "#33cc99",
-				"type": "line",
-				"yscale": 220,
-				"cross": 0
+				name: "MA1",
+				color: "#33cc99",
+				type: "line",
+				yscale: 220,
+				cross: 0
 			},
 			{
-				"name": "B1",
-				"color": "#ffcc33",
-				"type": "line",
-				"yscale": 220,
-				"cross": 0
+				name: "B1",
+				color: "#ffcc33",
+				type: "line",
+				yscale: 220,
+				cross: 0
 			},
 			{
-				"name": "B2",
-				"color": "#ffcc33",
-				"type": "line",
-				"yscale": 220,
-				"cross": 0
+				name: "B2",
+				color: "#ffcc33",
+				type: "line",
+				yscale: 220,
+				cross: 0
 			}
 		]
 	});
@@ -62,15 +62,20 @@ function onLoad() {
 	};
 	setInterval(function() {
 		var price = prices[idx++];
+
+		// store last N prices for moving average
 		if(ma.data.length >= ma.len) {
 			ma.data.shift();
 		}
 		ma.data.push((price[2]*100)-11300);
+
 		var tot1 = 0;
 		ma.data.forEach(function(pp) {
 			tot1 += pp;
 		});
+		// moving average
 		var avg = tot1/ma.data.length;
+		// standard deviation
 		var sdev = ma.data.stdDev();
 		c6.draw({
 			WTI: (price[2] * 100)-11300,
@@ -84,16 +89,14 @@ function onLoad() {
 </script>
 <style>
 body, textarea, input, p, div {
-  font-family: "Lucida Console", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Consolas, "Andale Mono", "Courier New";
+	font-family: "Lucida Console", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Consolas, "Andale Mono", "Courier New";
 }
-
 body {
-  background-color: #f5f5f5;
-  font-size: 8pt;
-  margin: 0;
-  padding: 4px;
+	background-color: #f5f5f5;
+	font-size: 8pt;
+	margin: 0;
+	padding: 4px;
 }
-
 div.cx-chart {
 	padding: 4px;
 	border: 1px solid silver;
@@ -102,22 +105,17 @@ div.cx-chart {
 	background-color: #999999;
 	color: white;
 }
-
 span.cx-legend-label {
 	background-color: black;
 }
-
 span.cx-legend-indicator {
 	background-color: black;
 }
-
 canvas.cx-canvas {
 }
-
 div.cx-legend {
 	background-color: black;
 }
-
 </style>
 </head>
 <body onload="onLoad()">

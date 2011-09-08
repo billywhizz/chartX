@@ -53,7 +53,7 @@ function ChartX(canvasid, options) {
 
 	function drawGrid() {
 		pgcontext.lineWidth = options.grid.linewidth || 1;
-        pgcontext.strokeStyle = options.grid.color;
+		pgcontext.strokeStyle = options.grid.color;
 		for(i=(options.width/options.grid.hsegments); i<options.width * options.bufferfactor; i += (options.width/options.grid.hsegments)) {
 			line(pgcontext, i, options.height, i, 0);
 		}
@@ -113,7 +113,7 @@ function ChartX(canvasid, options) {
 		var y1 = options.height;
 		options.series.forEach(function(item) {
 			pgcontext.lineWidth = options.linewidth || 1;
-        	pgcontext.strokeStyle = item.color;
+			pgcontext.strokeStyle = item.color;
 			var yinterval = options.height / item.yscale;
 			var current = stat[item.name];
 			if(item.cross) {

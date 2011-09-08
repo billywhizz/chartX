@@ -4,133 +4,155 @@
 <title>Chart Demo</title>
 <script type="text/javascript" src="js/chartx.js"></script>
 <script type="text/javascript" src="js/prices.js"></script>
+<script type="text/javascript" src="http://pseudosavant.googlecode.com/files/psMathStats.min.js"></script>
 <script type="text/javascript">
 var panelwidth = (window.innerWidth / 2) - 20;
 function onLoad() {
-	var c6 = new ChartX("PRICE/WTI/BRN", {
-		"width": panelwidth,
-		"height": 160,
-		"bufferfactor": 3,
-		"title": "WTI, Brent Price",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"linewidth": 1,
-		"series": [
+	var c6 = new ChartX("ID_1", {
+		width: panelwidth,
+		height: 160,
+		bufferfactor: 3,
+		title: "Comparison Line chart",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		linewidth: 1,
+		series: [
 			{
-				"name": "WTI",
-				"color": "#cc3300",
-				"type": "line",
-				"yscale": 870,
-				"cross": -300
+				name: "WTI",
+				color: "#cc3300",
+				type: "line",
+				yscale: 870,
+				cross: -300
 			},
 			{
-				"name": "Brent",
-				"color": "#339900",
-				"type": "line",
-				"yscale": 870,
-				"cross": -300
+				name: "Brent",
+				color: "#339900",
+				type: "line",
+				yscale: 870,
+				cross: -300
 			}
 		]
 	});
-	var c1 = new ChartX("UDV/WTI/BRN", {
-		"width": panelwidth,
-		"height": 160,
-		"bufferfactor": 3,
-		"title": "WTI U/D v Brent U/D",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"linewidth": 1,
-		"series": [
+	var c1 = new ChartX("ID_2", {
+		width: panelwidth,
+		height: 160,
+		bufferfactor: 3,
+		title: "Comparison Up/Down Stacked chart",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		linewidth: 1,
+		series: [
 			{
-				"name": "WTI",
-				"color": "#cc3300",
-				"type": "stack",
-				"yscale": 20,
-				"cross": 0
+				name: "WTI",
+				color: "#cc3300",
+				type: "stack",
+				yscale: 20,
+				cross: 0
 			},
 			{
-				"name": "Brent",
-				"color": "#339900",
-				"type": "stack",
-				"yscale": 20,
-				"cross": 0
+				name: "Brent",
+				color: "#339900",
+				type: "stack",
+				yscale: 20,
+				cross: 0
 			}
 		]
 	});
-	var c2 = new ChartX("UD/BRN", {
-		"width": panelwidth,
-		"height": 160,
-		"bufferfactor": 3,
-		"title": "Brent Up/Down",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"linewidth": 1,
-		"grid": {
-			"color": "#666666",
-			"hsegments": panelwidth/5,
-			"vsegments": 100/5,
-			"linewidth": .5
+	var c2 = new ChartX("ID_3", {
+		width: panelwidth,
+		height: 160,
+		bufferfactor: 3,
+		title: "Single Series Up Down Chart",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		linewidth: 1,
+		grid: {
+			color: "#666666",
+			hsegments: panelwidth/5,
+			vsegments: 160/5,
+			linewidth: .5
 		},
-		"series": [
+		series: [
 			{
-				"name": "Brent",
-				"color": "#339900",
-				"type": "line",
-				"yscale": 40,
-				"cross": 20
+				name: "Brent",
+				color: "#339900",
+				type: "line",
+				yscale: 40,
+				cross: 20
 			}
 		]
 	});
-	var c3 = new ChartX("UD/WTI", {
-		"width": panelwidth,
-		"height": 160,
-		"bufferfactor": 3,
-		"title": "WTI Up/Down",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"linewidth": 1,
-		"grid": {
-			"color": "#666666",
-			"hsegments": panelwidth/5,
-			"vsegments": 100/5,
-			"linewidth": .5
+	var c4 = new ChartX("ID_4", {
+		width: panelwidth,
+		height: 160,
+		bufferfactor: 3,
+		title: "Single Series Stacked Chart",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		linewidth: 1,
+		grid: {
+			color: "#666666",
+			hsegments: panelwidth/5,
+			vsegments: 160/5,
+			linewidth: .5
 		},
-		"series": [
+		series: [
 			{
-				"name": "WTI",
-				"color": "#ff9933",
-				"type": "line",
-				"yscale": 40,
-				"cross": 20
+				name: "Spread",
+				color: "#cc66cc",
+				type: "stack",
+				yscale: 30,
+				cross: 15
 			}
 		]
 	});
-	var c4 = new ChartX("SPREAD", {
-		"width": panelwidth,
-		"height": 100,
-		"bufferfactor": 3,
-		"title": "Spread - WTI v Brent",
-		"legend": true,
-		"container": "charts",
-		"bgcolor": "black",
-		"linewidth": 1,
-		"grid": {
-			"color": "#666666",
-			"hsegments": panelwidth/5,
-			"vsegments": 100/5,
-			"linewidth": .5
+	var c3 = new ChartX("ID_5", {
+		width: panelwidth,
+		height: 160,
+		bufferfactor: 3,
+		title: "Static Bollinger (no refresh)",
+		legend: true,
+		container: "charts",
+		bgcolor: "black",
+		grid: {
+			color: "#666666",
+			hsegments: panelwidth/5,
+			vsegments: 160/5,
+			linewidth: .5
 		},
-		"series": [
+		linewidth: 1,
+		series: [
 			{
-				"name": "Spread",
-				"color": "#cc66cc",
-				"type": "stack",
-				"yscale": 30,
-				"cross": 15
+				name: "WTI",
+				color: "#cc3300",
+				type: "line",
+				yscale: 220,
+				cross: 0
+			},
+			{
+				name: "MA1",
+				color: "#33cc99",
+				type: "line",
+				yscale: 220,
+				cross: 0
+			},
+			{
+				name: "B1",
+				color: "#ffcc33",
+				type: "line",
+				yscale: 220,
+				cross: 0
+			},
+			{
+				name: "B2",
+				color: "#ffcc33",
+				type: "line",
+				yscale: 220,
+				cross: 0
 			}
 		]
 	});
@@ -150,9 +172,6 @@ function onLoad() {
 			c2.draw({
 				Brent: brent
 			});
-			c3.draw({
-				WTI: wti
-			});
 			c4.draw({
 				Spread: spread - lastspread,
 			});
@@ -165,31 +184,44 @@ function onLoad() {
 		lastspread = spread;
 		if(idx == prices.length) idx = 0;
 	}, 100);
-/*
+
+	var ma = {
+		len: 20,
+		data: []
+	};
 	prices.forEach(function(price) {
-		var wti = (price[2] * 100) - 11250;
-		var brent = (price[3] * 100) - 8700;
-		c1.draw({
-			Spread: wti - brent + 50,
-			WTI: wti,
-			Brent: brent
+		// store last N prices for moving average
+		if(ma.data.length >= ma.len) {
+			ma.data.shift();
+		}
+		ma.data.push((price[2]*100)-11300);
+		var tot1 = 0;
+		ma.data.forEach(function(pp) {
+			tot1 += pp;
+		});
+		// moving average
+		var avg = tot1/ma.data.length;
+		// standard deviation
+		var sdev = ma.data.stdDev();
+		c3.draw({
+			WTI: (price[2] * 100)-11300,
+			MA1: avg,
+			B1: avg + (sdev * 2),
+			B2: avg - (sdev * 2)
 		});
 	});
-*/
 }
 </script>
 <style>
 body, textarea, input, p, div {
-  font-family: "Lucida Console", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Consolas, "Andale Mono", "Courier New";
+	font-family: "Lucida Console", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Consolas, "Andale Mono", "Courier New";
 }
-
 body {
-  background-color: #f5f5f5;
-  font-size: 8pt;
-  margin: 0;
-  padding: 4px;
+	background-color: #f5f5f5;
+	font-size: 8pt;
+	margin: 0;
+	padding: 4px;
 }
-
 div.cx-chart {
 	padding: 4px;
 	border: 1px solid silver;
@@ -198,22 +230,17 @@ div.cx-chart {
 	background-color: #999999;
 	color: white;
 }
-
 span.cx-legend-label {
 	background-color: black;
 }
-
 span.cx-legend-indicator {
 	background-color: black;
 }
-
 canvas.cx-canvas {
 }
-
 div.cx-legend {
 	background-color: black;
 }
-
 </style>
 </head>
 <body onload="onLoad()">
